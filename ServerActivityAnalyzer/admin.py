@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from ServerActivityAnalyzer.models import (
+    ServerResponse,
+    Server,
+)
+
+admin.site.register(ServerResponse)
+admin.site.register(Server)

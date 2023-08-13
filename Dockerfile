@@ -13,4 +13,4 @@ RUN pipenv install --system
 
 COPY ./ ./
 
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+#ENTRYPOINT ["sh", "./entrypoint.sh"]
