@@ -1,16 +1,9 @@
-from rest_framework import mixins, status, generics
-from rest_framework.decorators import action
+from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
-
-from ServerActivityAnalyzer.models import Server
-from ServerActivityAnalyzer.serializers import ServerSerializer
+from ServerActivityAnalyzer.controllers import ServersChartController
 
 
-class ServersViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    GenericViewSet
-):
-    queryset = Server.objects.all()
-    serializer_class = ServerSerializer
+class ServersChartViewSet(viewsets.ViewSet):
+    def list(self, request):
+        data = ServersChartController.get_chart_data()
+        return Response(data)

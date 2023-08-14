@@ -1,4 +1,6 @@
 import os
+import sys
+import logging
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -145,3 +147,27 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
 CELERY_TASK_CALL_PERIOD_SECONDS = 60
+
+
+import sys
+import logging
+
+# Определите уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+LOG_LEVEL = logging.INFO
+
+# Настройки для вывода логов в stdout
+LOGGING_CONFIG = None
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'stdout': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        },
+    },
+    'root': {
+        'handlers': ['stdout'],
+        'level': LOG_LEVEL,
+    },
+}

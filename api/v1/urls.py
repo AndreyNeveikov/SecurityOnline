@@ -1,8 +1,11 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-
-from ServerActivityAnalyzer.views import ServersViewSet
+from ServerActivityAnalyzer.views import ServersChartViewSet
 
 router = DefaultRouter()
-router.register(r'server', ServersViewSet, basename='server')
+router.register(r'server-chart', ServersChartViewSet, basename='server-chart')
 
-urlpatterns = router.urls
+
+urlpatterns = [
+    path('', include(router.urls)),
+]

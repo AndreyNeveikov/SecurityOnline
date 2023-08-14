@@ -1,13 +1,8 @@
 from SecurityOnline.celery import app
-#from .models import Person
-#import requests
-#import json
-#import time
+from ServerActivityAnalyzer.controllers import ping_servers_list
 
-@app.task #регистриуем таску
-def repeat_order_make():
-    print('adsdasd')
 
-    #url = 'sdasd'
-    #obj = Person.objects.get_or_create(last_name=f'{time.time()}11111111111111111', first_name='1111')
-    return "заглушка"
+@app.task
+def ping_servers_list_task():
+    ping_servers_list()
+    return None

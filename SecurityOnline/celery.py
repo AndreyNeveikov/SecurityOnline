@@ -1,5 +1,4 @@
 import os
-import time
 
 from celery import Celery
 from celery.schedules import crontab
@@ -17,15 +16,8 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'every': {
-        'task': 'ServerActivityAnalyzer.tasks.repeat_order_make',
+        'task': 'ServerActivityAnalyzer.tasks.ping_servers_list_task',
         'schedule': crontab(minute=f'*/{CELERY_TASK_CALL_PERIOD_SECONDS // 60}'),
     },
 
 }
-
-
-@app.task
-def debug_task():
-    time.sleep(15)
-    print('adsdasd')
-    return "заглушка"

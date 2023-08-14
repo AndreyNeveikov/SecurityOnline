@@ -1,9 +1,13 @@
 from rest_framework import serializers
 
-from .models import Server
+from .models import (
+    ServerResponse,
+    Server
+)
 
 
-class ServerSerializer(serializers.ModelSerializer):
+class ServerResponseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Server
-        fields = ('id', 'name', 'url', 'description')
+        model = ServerResponse
+        fields = ('response_from', 'response_time', 'created_at')
+
