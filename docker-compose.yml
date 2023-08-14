@@ -1,27 +1,96 @@
-version: "3.9"
+version: "3.11"
 
 services:
+  celery:
+    build: ./
+    container_name: celery
+    hostname: worker
+    command: celery -A SecurityOnline worker -l info
+    restart: always
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+    networks:
+      - security_online_bridge_network
+
+  celery-beat:
+    build: ./
+    container_name: celery-beat
+    hostname: celery-beat
+    command: celery -A SecurityOnline beat -l info
+    restart: always
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+    networks:
+      - security_online_bridge_network
 
   db:
     container_name: db
     image: postgres:15-alpine
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
+    networks:
+      - security_online_bridge_network
 
   backend:
     container_name: backend
-    build:
-      context: ""
-      dockerfile: Dockerfile
-    command: sh ./entrypoint.sh
+    build: ./
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - '8000:8000'
+    volumes:
+      - .:/code
     env_file:
       - .env
     depends_on:
       - db
+      - redis
+    networks:
+      - security_online_bridge_network
+
+  createsuperuser:
+    container_name: createsuperuser
+    build: ./
+    command: sh -c "python manage.py createsuperuser --noinput"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: "no"
+    networks:
+      - security_online_bridge_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - security_online_bridge_network
+
+networks:
+  security_online_bridge_network:
+    driver: bridge
 
 volumes:
   postgres_data:
