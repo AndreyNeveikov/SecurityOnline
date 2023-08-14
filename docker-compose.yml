@@ -15,6 +15,7 @@ services:
       - redis
     depends_on:
       - redis
+      - db
     networks:
       - security_online_bridge_network
 
@@ -32,6 +33,7 @@ services:
       - redis
     depends_on:
       - redis
+      - db
     networks:
       - security_online_bridge_network
 
@@ -62,6 +64,21 @@ services:
     networks:
       - security_online_bridge_network
 
+  createsuperuser:
+    container_name: createsuperuser
+    build: ./
+    command: sh -c "python manage.py createsuperuser --noinput"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: "no"
+    networks:
+      - security_online_bridge_network
+
   redis:
     image: redis:latest
     container_name: redis
@@ -70,18 +87,6 @@ services:
       - '6379:6379'
     networks:
       - security_online_bridge_network
-
-  create_superuser:
-    build: ./
-    container_name: create_superuser
-    command: python manage.py createsuperuser --noinput
-    volumes:
-      - .:/code
-    env_file:
-      - .env
-    depends_on:
-      - backend
-    restart: "no"
 
 networks:
   security_online_bridge_network:

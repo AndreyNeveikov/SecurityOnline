@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 
 def ping_server(server):
-    thread_name = threading.current_thread().name
     try:
         start_time = time.time()
         response = requests.get(
@@ -48,6 +47,10 @@ def ping_server(server):
 def ping_servers_list():
     logger.info('ping_servers_list started')
     servers_list_obj = Server.objects.all()
+
+    if not servers_list_obj:
+        logger.warning('No servers found to ping')
+        return None
 
     with ThreadPoolExecutor(max_workers=len(servers_list_obj)) as executor:
         for server in servers_list_obj:
